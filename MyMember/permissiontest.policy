@@ -1,0 +1,3 @@
+grant 
+{ permission com.pro.securitymanager.BadWordPermit "sex,drugs,fuck","avoid";
+};

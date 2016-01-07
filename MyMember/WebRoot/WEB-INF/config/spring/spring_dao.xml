@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd"> 
+	<!-- datasource. also used by PoolFactory. -->
+	<!-- id must be 'ds', destroy-method属性可以确保Spring容器关闭时，数据源能够正常关闭 -->
+	<bean id="ds" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="url"             value="jdbc:oracle:thin:@116.236.224.212:1521:nop" />
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="username"        value="zzy" />
+		<property name="password"        value="zzy1234" />
+		
+		<!-- Connection Pooling Info -->		
+		<!-- 初始化连接数 -->
+		<property name="initialSize" value="5" />
+		<!-- 最大数据库连接数 -->
+		<property name="maxActive" value="100" />
+		<!-- 最大空闲数 -->
+		<property name="maxIdle" value="20" />
+		<!-- 最小空闲数 -->
+		<property name="minIdle" value="5" />
+		<!-- 最大建立连接等待时间ms -->
+		<property name="maxWait" value="5000" />
+		<!-- 进行连接空闲时间判断配置，时间间隔为分钟 -->
+		<property name="minEvictableIdleTimeMillis" value="5" />
+		<!-- 强制自我中断避免dbcp自身bug出现连接过久资源耗尽(默认为false) -->
+		<property name="removeAbandoned" value="true" />
+		<!-- 自我中断时间秒(默认为300秒) -->
+		<property name="removeAbandonedTimeout" value="300" />
+		<!-- 记录中断事件(默认为false) -->
+		<property name="logAbandoned" value="true" />
+		<!-- 取得对象时是否进行验证，检查对象是否有效(默认为false) -->
+		<property name="testOnBorrow" value="true"/> 
+		<!-- 返回对象时是否进行验证(默认为false) -->
+		<property name="testOnReturn" value="true"/> 
+		<!-- 空闲时是否进行验证，检查对象是否有效(默认为false) -->
+		<property name="testWhileIdle" value="true"/> 
+		<!-- 验证检查执行的sql -->
+		<property name="validationQuery" value="select 1 from dual"/> 
+		<!-- 是否开启statement cache，默认为false，也就是不开启 -->
+		<property name="poolPreparedStatements" value="true" />
+		<!-- statement cache的大小，默认为-1，也就是不限制 -->
+		<property name="maxOpenPreparedStatements" value="10" />				
+	</bean>
+
+	<!-- jdbcTemplate -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="ds"/>
+	</bean>	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="ds" />
+	</bean>
+</beans>
